@@ -1,6 +1,6 @@
 <template>
-  <div style="display: flex; flex-wrap: wrap;">
-    <div ref="printMe" style="width: 360px;">
+  <div>
+    <div ref="printMe">
       <header class="top-header chat-header">
         <div class="header__top">
           <div class="header__column">
@@ -8,7 +8,10 @@
             <i class="fa fa-wifi"></i>
           </div>
           <div class="header__column">
-            <span class="header__time">18:38</span>
+            <span class="header__time" v-if="editable('time')">
+              <input type="text" v-model="time">
+            </span>
+            <span class="header__time" v-else @click="select('time')">{{ time }}</span>
           </div>
           <div class="header__column">
             <i class="fa fa-moon-o"></i>
@@ -21,23 +24,29 @@
         </div>
         <div class="header__bottom">
           <div class="header__column">
-            <a href="chats.html">
+            <a href="#" @click="unselect">
               <i class="fa fa-chevron-left fa-lg"></i>
             </a>
           </div>
           <div class="header__column">
-            <span class="header__text">{{ user.name }}</span>
+            <span class="header__text" v-if="editable('name')">
+              <input type="text" v-model="user.name">
+            </span>
+            <span class="header__text" v-else @click="select('name')">{{ user.name }}</span>
           </div>
           <div class="header__column">
             <i class="fa fa-search"></i>
             &nbsp;
-            <i class="fa fa-bars"></i>
+            <i class="fa fa-bars" @click="showModal = true"></i>
           </div>
         </div>
       </header>
-      <div class="chat" @click="unselect">
+      <main class="chat">
         <div class="date-divider">
-          <span class="date-divider__text">{{today}}</span>
+          <span class="date-divider__text" v-if="editable('today')">
+            <input type="text" v-model="today">
+          </span>
+          <span class="date-divider__text" v-else @click="select('today')">{{today}}</span>
         </div>
         <div v-for="(message, index) in messages" :key="index">
           <div v-if="!message.me" class="chat__message chat__message--to-me">
@@ -47,7 +56,7 @@
               <span v-if="editable(index)" class="chat__message-body">
                 <input type="text" v-model="message.content">
               </span>
-              <span v-else class="chat__message-body" @dblclick="select(index)">{{message.content}}</span>
+              <span v-else class="chat__message-body" @click="select(index)">{{message.content}}</span>
             </div>
             <span v-if="editable(index)" class="chat__message-time">
               <input type="text" v-model="message.time">
@@ -62,10 +71,10 @@
             <span v-if="editable(index)" class="chat__message-body">
               <input type="text" v-model="message.content">
             </span>
-            <span v-else class="chat__message-body" @dblclick="select(index)">{{message.content}}</span>
+            <span v-else class="chat__message-body" @click="select(index)">{{message.content}}</span>
           </div>
         </div>
-      </div>
+      </main>
       <div class="type-message">
         <i class="fa fa-plus fa-lg"></i>
         <div class="type-message__input">
@@ -76,58 +85,70 @@
           </span>
         </div>
       </div>
-      <!-- <div class="bigScreenText">
-        <span>Please make your screen smaller</span>
-      </div>-->
     </div>
-    <div style="margin: 20px;">
-      <div class="form-group">
-        <label for="img-src">프로필사진</label>
-        <input class="form-control" id="img-src" name="img-src" type="text" v-model="user.imageSrc">
-      </div>
-      <div class="form-group">
-        <label for="message-content-input">메시지 입력</label>
-        <input
-          type="text"
-          class="form-control"
-          name="message-content-input"
-          id="message-content-input"
-          v-model="input.content"
-        >
-      </div>
-      <div class="form-group">
-        <label for="message-time-input">시간</label>
-        <input
-          type="text"
-          class="form-control"
-          id="message-time-input"
-          placeholder="예: 오전 09:00"
-          v-model="input.time"
-        >
-      </div>
-      <div>
-        <div class="form-group form-check">
+    <modal v-if="showModal" @close="showModal = false">
+      <div slot="body">
+        <div class="form-group">
+          <label for="img-src">프로필사진</label>
           <input
-            class="form-check-input"
-            type="checkbox"
-            name="me-input"
-            id="me-id-input"
-            v-model="input.me"
+            class="form-control"
+            id="img-src"
+            name="img-src"
+            type="text"
+            v-model="user.imageSrc"
           >
-          <label class="form-check-label" for="me-input">나</label>
         </div>
-        <button class="btn btn-primary" type="button" @click="add">입력</button>
-        <button class="btn btn-primary" type="button" @click="remove">마지막 메시지 제거</button>
-        <button class="btn btn-primary" type="button" @click="download">다운로드</button>
+        <div class="form-group">
+          <label for="message-content-input">메시지 입력</label>
+          <input
+            type="text"
+            class="form-control"
+            name="message-content-input"
+            id="message-content-input"
+            v-model="input.content"
+          >
+        </div>
+        <div class="form-group">
+          <label for="message-time-input">시간</label>
+          <input
+            type="text"
+            class="form-control"
+            id="message-time-input"
+            placeholder="예: 오전 09:00"
+            v-model="input.time"
+          >
+        </div>
+        <div>
+          <div class="form-group form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="me-input"
+              id="me-id-input"
+              v-model="input.me"
+            >
+            <label class="form-check-label" for="me-input">나</label>
+          </div>
+          <button class="btn btn-primary" type="button" @click="add">입력</button>
+          <button class="btn btn-primary" type="button" @click="remove">마지막 메시지 제거</button>
+          <button class="btn btn-primary" type="button" @click="download">다운로드</button>
+        </div>
       </div>
-    </div>
+    </modal>
   </div>
 </template>
 <script>
+import Modal from "./components/Modal";
+
 export default {
   name: "app",
+  components: {
+    Modal
+  },
   data() {
     return {
+      time: "18:38",
+      showModal: false,
       selected: null,
       today: "Tuesday, May 21, 2019",
       input: { content: "", time: "", me: false },
@@ -158,28 +179,32 @@ export default {
       this.input = { content: "", time: "", me: false };
     },
     select(index) {
+      console.log("select");
       this.selected = index;
     },
     unselect() {
+      console.log("unselect");
       this.selected = null;
     },
     editable(index) {
       return this.selected === index;
     },
     async download() {
-      const el = this.$refs.printMe;
+      this.showModal = false
+      // const el = this.$refs.printMe;
+      const el = document.body;
       // add option type to get the image version
-      // if not provided the promise will return 
+      // if not provided the promise will return
       // the canvas.
       const options = {
-        type: 'dataURL',
+        type: "dataURL",
         useCORS: true
-      }
+      };
       const MIME_TYPE = "image/png";
       // const imgURL = canvasElement.toDataURL(MIME_TYPE);
       const imgURL = await this.$html2canvas(el, options);
       const dlLink = document.createElement("a");
-      
+
       dlLink.download = "capture";
       dlLink.href = imgURL;
       dlLink.dataset.downloadurl = [
