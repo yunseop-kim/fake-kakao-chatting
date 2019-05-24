@@ -13,7 +13,7 @@
 
 .chat {
   background-color: #a1c0d6;
-  height: 530px;
+  height: 84vh;
   padding-top: 15px;
   padding-left: 5px;
   padding-right: 5px;
@@ -73,9 +73,9 @@
 }
 
 .type-message {
-  width: 360px;
-  /* bottom: 0; */
-  /* position: sticky; */
+  width: 100%;
+  bottom: 0;
+  position: fixed;
   height: 45px;
   background: #eeeeee;
   display: flex;
@@ -99,7 +99,6 @@
 .type-message__input input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #b4b4b4;
 }
 
 .type-message__input .fa-smile-o {

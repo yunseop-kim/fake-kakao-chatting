@@ -2,8 +2,8 @@
   background-color: #523737;
   color: white;
   padding: 5px 10px 15px 10px;
-  /* position: sticky; */
-  width: 360px;
+  position: fixed;
+  width: 100%;
   top: 0;
   z-index: 2;
 }
