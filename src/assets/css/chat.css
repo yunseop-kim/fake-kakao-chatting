@@ -38,6 +38,9 @@
 
 .chat__message--to-me img {
   align-self: flex-start;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .chat__message-time {
@@ -58,12 +61,6 @@
   max-width: 250px;
 }
 
-.chat__message--to-me img {
-  height: 35px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
 .chat__message .chat__message-username {
   font-size: 12px;
   font-weight: 600;
@@ -78,7 +75,7 @@
 .type-message {
   width: 360px;
   /* bottom: 0; */
-  position: fixed;
+  /* position: sticky; */
   height: 45px;
   background: #eeeeee;
   display: flex;
@@ -102,6 +99,7 @@
 .type-message__input input {
   width: 100%;
   padding: 10px;
+  border: 1px solid #b4b4b4;
 }
 
 .type-message__input .fa-smile-o {

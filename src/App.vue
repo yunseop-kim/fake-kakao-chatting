@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex; flex-wrap: wrap;">
-    <div style="width: 360px;">
+    <div ref="printMe" style="width: 360px;">
       <header class="top-header chat-header">
         <div class="header__top">
           <div class="header__column">
@@ -35,7 +35,7 @@
           </div>
         </div>
       </header>
-      <main class="chat" @click="unselect">
+      <div class="chat" @click="unselect">
         <div class="date-divider">
           <span class="date-divider__text">{{today}}</span>
         </div>
@@ -65,7 +65,7 @@
             <span v-else class="chat__message-body" @dblclick="select(index)">{{message.content}}</span>
           </div>
         </div>
-      </main>
+      </div>
       <div class="type-message">
         <i class="fa fa-plus fa-lg"></i>
         <div class="type-message__input">
@@ -97,15 +97,28 @@
       </div>
       <div class="form-group">
         <label for="message-time-input">시간</label>
-        <input type="text" class="form-control" id="message-time-input" placeholder="예: 오전 09:00" v-model="input.time">
+        <input
+          type="text"
+          class="form-control"
+          id="message-time-input"
+          placeholder="예: 오전 09:00"
+          v-model="input.time"
+        >
       </div>
       <div>
         <div class="form-group form-check">
-          <input class="form-check-input" type="checkbox" name="me-input" id="me-id-input" v-model="input.me">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="me-input"
+            id="me-id-input"
+            v-model="input.me"
+          >
           <label class="form-check-label" for="me-input">나</label>
         </div>
         <button class="btn btn-primary" type="button" @click="add">입력</button>
         <button class="btn btn-primary" type="button" @click="remove">마지막 메시지 제거</button>
+        <button class="btn btn-primary" type="button" @click="download">다운로드</button>
       </div>
     </div>
   </div>
@@ -121,7 +134,7 @@ export default {
       user: {
         imageSrc:
           "https://is2-ssl.mzstatic.com/image/thumb/Purple128/v4/b7/74/60/b774609f-a95c-92bb-49e0-647c0ce9f1e0/source/512x512bb.jpg",
-        name: "Jesus",
+        name: "Jesus"
       },
       messages: [
         { content: "Hello World!", time: "오전 9:43", me: false },
@@ -132,26 +145,52 @@ export default {
   methods: {
     add(event) {
       if (!this.input.content || !this.input.time) return;
-      this.messages.push(this.input)
-      this.initInput()
+      this.messages.push(this.input);
+      this.initInput();
     },
     remove(event) {
-      if(window.confirm("정말 제거하시겠습니까?")){
-        this.messages.pop()
-        this.initInput()
+      if (window.confirm("정말 제거하시겠습니까?")) {
+        this.messages.pop();
+        this.initInput();
       }
     },
     initInput() {
-      this.input = { content: "", time: "", me: false }
+      this.input = { content: "", time: "", me: false };
     },
     select(index) {
-      this.selected = index
+      this.selected = index;
     },
     unselect() {
-      this.selected = null
+      this.selected = null;
     },
     editable(index) {
-      return this.selected === index
+      return this.selected === index;
+    },
+    async download() {
+      const el = this.$refs.printMe;
+      // add option type to get the image version
+      // if not provided the promise will return 
+      // the canvas.
+      const options = {
+        type: 'dataURL',
+        useCORS: true
+      }
+      const MIME_TYPE = "image/png";
+      // const imgURL = canvasElement.toDataURL(MIME_TYPE);
+      const imgURL = await this.$html2canvas(el, options);
+      const dlLink = document.createElement("a");
+      
+      dlLink.download = "capture";
+      dlLink.href = imgURL;
+      dlLink.dataset.downloadurl = [
+        MIME_TYPE,
+        dlLink.download,
+        dlLink.href
+      ].join(":");
+
+      document.body.appendChild(dlLink);
+      dlLink.click();
+      document.body.removeChild(dlLink);
     }
   }
 };
