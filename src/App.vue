@@ -17,7 +17,7 @@
             <i class="fa fa-moon-o"></i>
             <i class="fa fa-bluetooth-b"></i>
             <span class="header__battery">
-              66%
+              100%
               <i class="fa fa-battery-full"></i>
             </span>
           </div>
@@ -54,9 +54,9 @@
             <div class="chat__message-center">
               <h3 class="chat__message-username">{{user.name}}</h3>
               <span v-if="editable(index)" class="chat__message-body">
-                <input type="text" v-model="message.content">
+                <textarea cols="27" v-model="message.content"></textarea>
               </span>
-              <span v-else class="chat__message-body" @click="select(index)">{{message.content}}</span>
+              <span v-else class="chat__message-body" style="white-space: pre-line" @click="select(index)">{{message.content}}</span>
             </div>
             <span v-if="editable(index)" class="chat__message-time">
               <input type="text" v-model="message.time">
@@ -69,7 +69,7 @@
             </span>
             <span v-else class="chat__message-time">{{message.time}}</span>
             <span v-if="editable(index)" class="chat__message-body">
-              <input type="text" v-model="message.content">
+              <textarea v-model="message.content"></textarea>
             </span>
             <span v-else class="chat__message-body" @click="select(index)">{{message.content}}</span>
           </div>
