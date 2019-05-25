@@ -99,6 +99,7 @@
 .type-message__input input {
   width: 100%;
   padding: 10px;
+  border: 1px solid #c7c6c6;
 }
 
 .type-message__input .fa-smile-o {

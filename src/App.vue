@@ -37,7 +37,7 @@
           <div class="header__column">
             <i class="fa fa-search"></i>
             &nbsp;
-            <i class="fa fa-bars" @click="showModal = true"></i>
+            <i class="fa fa-bars"></i>
           </div>
         </div>
       </header>
@@ -76,7 +76,7 @@
         </div>
       </main>
       <div class="type-message">
-        <i class="fa fa-plus fa-lg"></i>
+        <i class="fa fa-plus fa-lg" @click="showModal = true"></i>
         <div class="type-message__input">
           <input type="text">
           <i class="fa fa-smile-o fa-lg"></i>
@@ -87,6 +87,7 @@
       </div>
     </div>
     <modal v-if="showModal" @close="showModal = false">
+      <h3 slot="header">입력</h3>
       <div slot="body">
         <div class="form-group">
           <label for="img-src">프로필사진</label>
@@ -139,6 +140,7 @@
 </template>
 <script>
 import Modal from "./components/Modal";
+import moment from 'moment';
 
 export default {
   name: "app",
@@ -147,10 +149,10 @@ export default {
   },
   data() {
     return {
-      time: "18:38",
+      time: moment().locale('ko').format('k:mm'),
       showModal: false,
       selected: null,
-      today: "Tuesday, May 21, 2019",
+      today: moment().locale('ko').format('LL'),
       input: { content: "", time: "", me: false },
       user: {
         imageSrc:
@@ -158,14 +160,14 @@ export default {
         name: "Jesus"
       },
       messages: [
-        { content: "Hello World!", time: "오전 9:43", me: false },
-        { content: "반갑습니다", time: "오전 9:43", me: true }
+        { content: "Hello World!", time: moment().locale('ko').format('A h:mm'), me: false }
       ]
     };
   },
   methods: {
     add(event) {
-      if (!this.input.content || !this.input.time) return;
+      if (!this.input.content) return;
+      if (!this.input.time) this.input.time = moment().locale('ko').format('A h:mm');
       this.messages.push(this.input);
       this.initInput();
     },
