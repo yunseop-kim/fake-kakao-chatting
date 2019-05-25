@@ -164,6 +164,11 @@ export default {
       ]
     };
   },
+  beforeMount(){
+    if (window.confirm("튜토리얼을 확인하시겠습니까?")){
+      window.open('https://youtu.be/DSEOryKvISk', '_blank')
+    }
+  },
   methods: {
     add(event) {
       if (!this.input.content) return;
