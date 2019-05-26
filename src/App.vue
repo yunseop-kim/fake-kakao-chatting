@@ -130,10 +130,12 @@
             >
             <label class="form-check-label" for="me-input">나</label>
           </div>
-          <button class="btn btn-primary" type="button" @click="add">입력</button>
-          <button class="btn btn-primary" type="button" @click="remove">마지막 메시지 제거</button>
-          <button class="btn btn-primary" type="button" @click="download">다운로드</button>
         </div>
+      </div>
+      <div slot="footer">
+        <button class="btn btn-primary" type="button" @click="add">입력</button>
+        <button class="btn btn-primary" type="button" @click="remove">마지막 메시지 제거</button>
+        <!-- <button class="btn btn-primary" type="button" @click="download">다운로드</button> -->
       </div>
     </modal>
   </div>
@@ -175,6 +177,7 @@ export default {
       if (!this.input.time) this.input.time = moment().locale('ko').format('A h:mm');
       this.messages.push(this.input);
       this.initInput();
+      this.showModal = false;
     },
     remove(event) {
       if (window.confirm("정말 제거하시겠습니까?")) {
