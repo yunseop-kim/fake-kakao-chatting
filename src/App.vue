@@ -156,11 +156,11 @@ export default {
       input: { content: "", time: "", me: false },
       user: {
         imageSrc:
-          "https://is2-ssl.mzstatic.com/image/thumb/Purple128/v4/b7/74/60/b774609f-a95c-92bb-49e0-647c0ce9f1e0/source/512x512bb.jpg",
-        name: "Jesus"
+          "http://www.pororopark.com/images/sub/circle_pororo.png",
+        name: "뽀로로"
       },
       messages: [
-        { content: "Hello World!", time: moment().locale('ko').format('A h:mm'), me: false }
+        { content: "친구야 안녕!", time: moment().locale('ko').format('A h:mm'), me: false }
       ]
     };
   },
