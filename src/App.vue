@@ -139,7 +139,7 @@ export default {
       },
       messages: [
         {
-          content: "친구야 안녕!",
+          content: "환영합니다. 아래 + 버튼을 누르시면 대화 추가가 가능합니다.",
           time: moment()
             .locale("ko")
             .format("A h:mm"),
