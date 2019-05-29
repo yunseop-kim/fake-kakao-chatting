@@ -10,6 +10,7 @@
           <div class="header__column">
             <span class="header__time" v-if="editable('time')">
               <input type="text" v-model="time">
+              <button @click="unselect">수정</button>
             </span>
             <span class="header__time" v-else @click="select('time')">{{ time }}</span>
           </div>
@@ -24,13 +25,14 @@
         </div>
         <div class="header__bottom">
           <div class="header__column">
-            <a href="#" @click="unselect">
+            <a href="#">
               <i class="fa fa-chevron-left fa-lg"></i>
             </a>
           </div>
           <div class="header__column">
             <span class="header__text" v-if="editable('name')">
               <input type="text" v-model="user.name">
+              <button @click="unselect">수정</button>
             </span>
             <span class="header__text" v-else @click="select('name')">{{ user.name }}</span>
           </div>
@@ -45,34 +47,13 @@
         <div class="date-divider">
           <span class="date-divider__text" v-if="editable('today')">
             <input type="text" v-model="today">
+            <button @click="unselect">수정</button>
           </span>
           <span class="date-divider__text" v-else @click="select('today')">{{today}}</span>
         </div>
         <div v-for="(message, index) in messages" :key="index">
-          <div v-if="!message.me" class="chat__message chat__message--to-me">
-            <img :src="user.imageSrc" class="chat__message-avatar">
-            <div class="chat__message-center">
-              <h3 class="chat__message-username">{{user.name}}</h3>
-              <span v-if="editable(index)" class="chat__message-body">
-                <textarea cols="27" v-model="message.content"></textarea>
-              </span>
-              <span v-else class="chat__message-body" style="white-space: pre-line" @click="select(index)">{{message.content}}</span>
-            </div>
-            <span v-if="editable(index)" class="chat__message-time">
-              <input type="text" v-model="message.time">
-            </span>
-            <span v-else class="chat__message-time">{{message.time}}</span>
-          </div>
-          <div v-else class="chat__message chat__message-from-me">
-            <span v-if="editable(index)" class="chat__message-time">
-              <input type="text" v-model="message.time">
-            </span>
-            <span v-else class="chat__message-time">{{message.time}}</span>
-            <span v-if="editable(index)" class="chat__message-body">
-              <textarea v-model="message.content"></textarea>
-            </span>
-            <span v-else class="chat__message-body" @click="select(index)">{{message.content}}</span>
-          </div>
+          <To v-if="!message.me" :message="message" :name="user.name" :image="user.imageSrc" />
+          <From v-else :message="message" />
         </div>
       </main>
       <div class="type-message">
@@ -91,68 +72,67 @@
         </div>
       </div>
     </div>
-    <modal v-if="showModal" @close="showModal = false">
+    <modal v-if="showModal" @close="close">
       <h3 slot="header">입력</h3>
       <div slot="body">
-        <div class="form-group">
+        <div>
           <label for="img-src">프로필사진</label>
           <input
-            class="form-control"
             id="img-src"
             name="img-src"
             type="text"
             v-model="user.imageSrc"
           >
         </div>
-        <div class="form-group">
+        <div>
           <label for="message-content-input">메시지 입력</label>
           <input
             type="text"
-            class="form-control"
             name="message-content-input"
             id="message-content-input"
+            placeholder="메시지는 필수 입력입니다."
             v-model="input.content"
           >
         </div>
-        <div class="form-group">
+        <div>
           <label for="message-time-input">시간</label>
           <input
             type="text"
-            class="form-control"
             id="message-time-input"
-            placeholder="예: 오전 09:00"
+            placeholder="기본값: 현재 시간"
             v-model="input.time"
           >
         </div>
         <div>
-          <div class="form-group form-check">
+          <div>
             <input
-              class="form-check-input"
               type="checkbox"
               name="me-input"
               id="me-id-input"
               v-model="input.me"
             >
-            <label class="form-check-label" for="me-input">나</label>
+            <label for="me-input">나</label>
           </div>
         </div>
       </div>
       <div slot="footer">
-        <button class="btn btn-primary" type="button" @click="add">입력</button>
-        <button class="btn btn-primary" type="button" @click="remove">마지막 메시지 제거</button>
-        <!-- <button class="btn btn-primary" type="button" @click="download">다운로드</button> -->
+        <button type="button" @click="close">취소</button>
+        <button type="button" @click="add">입력</button>
+        <button type="button" @click="remove">마지막 메시지 제거</button>
       </div>
     </modal>
   </div>
 </template>
 <script>
 import Modal from "./components/Modal";
+import To from "./components/To";
+import From from "./components/From";
 import moment from 'moment';
 
 export default {
   name: "app",
   components: {
-    Modal
+    Modal, To, From
   },
   data() {
     return {
@@ -208,6 +188,9 @@ export default {
     unselect() {
       console.log("unselect");
       this.selected = null;
+    },
+    close() {
+      this.showModal = false
     },
     editable(index) {
       return this.selected === index;
