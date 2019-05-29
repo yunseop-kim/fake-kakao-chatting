@@ -22,7 +22,7 @@
               </button>
             </slot>
             <div>
-              <span style="font-size: 10px;">아래 배너를 눌러주시면 운영에 큰 힘이 됩니다. (_ _)</span>
+              <span style="font-size: 10px;">아래 광고를 눌러주시면 운영에 큰 힘이 됩니다. (_ _)</span>
               <Adsense data-ad-client="ca-pub-4995410357973680" data-ad-slot="3055391333" />
             </div>
           </div>
