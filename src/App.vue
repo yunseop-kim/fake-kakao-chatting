@@ -78,7 +78,12 @@
       <div class="type-message">
         <i class="fa fa-plus fa-lg" @click="showModal = true"></i>
         <div class="type-message__input">
-          <input type="text">
+          <input type="text" 
+            v-model="input.content" 
+            @keyup.shift.enter.exact="addOtherTalk" 
+            @keyup.enter.exact="addMyTalk"
+            @keyup.ctrl.enter.exact="remove"
+          >
           <i class="fa fa-smile-o fa-lg"></i>
           <span class="record-message">
             <i class="fa fa-microphone fa-lg"></i>
@@ -178,6 +183,14 @@ export default {
       this.messages.push(this.input);
       this.initInput();
       this.showModal = false;
+    },
+    addOtherTalk() {
+      this.input.me = false;
+      this.add();
+    },
+    addMyTalk() {
+      this.input.me = true;
+      this.add();
     },
     remove(event) {
       if (window.confirm("정말 제거하시겠습니까?")) {
