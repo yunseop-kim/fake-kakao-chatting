@@ -31,9 +31,19 @@ export default {
   },
   methods: {
     edit() {
+      this.$ga.event({
+        eventCategory: 'from',
+        eventAction: 'edit',
+        eventValue: this.message
+      })
       this.editable = true;
     },
     complete() {
+      this.$ga.event({
+        eventCategory: 'from',
+        eventAction: 'complete',
+        eventValue: this.message
+      })
       this.editable = false;
     }
   }

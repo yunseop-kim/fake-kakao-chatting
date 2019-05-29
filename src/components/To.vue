@@ -50,9 +50,19 @@ export default {
   },
   methods: {
     edit() {
+      this.$ga.event({
+        eventCategory: 'to',
+        eventAction: 'edit',
+        eventValue: this.message
+      })
       this.editable = true;
     },
     complete() {
+      this.$ga.event({
+        eventCategory: 'to',
+        eventAction: 'complete',
+        eventValue: this.message
+      })
       this.editable = false
     }
   }

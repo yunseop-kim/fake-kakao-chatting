@@ -12,7 +12,8 @@
     "core-js": "^2.6.5",
     "html2canvas": "^1.0.0-rc.1",
     "moment": "^2.24.0",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-analytics": "^5.16.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",

@@ -52,16 +52,17 @@
           <span class="date-divider__text" v-else @click="select('today')">{{today}}</span>
         </div>
         <div v-for="(message, index) in messages" :key="index">
-          <To v-if="!message.me" :message="message" :name="user.name" :image="user.imageSrc" />
-          <From v-else :message="message" />
+          <To v-if="!message.me" :message="message" :name="user.name" :image="user.imageSrc"/>
+          <From v-else :message="message"/>
         </div>
       </main>
       <div class="type-message">
         <i class="fa fa-plus fa-lg" @click="showModal = true"></i>
         <div class="type-message__input">
-          <input type="text" 
-            v-model="input.content" 
-            @keyup.shift.enter.exact="addOtherTalk" 
+          <input
+            type="text"
+            v-model="input.content"
+            @keyup.shift.enter.exact="addOtherTalk"
             @keyup.enter.exact="addMyTalk"
             @keyup.ctrl.enter.exact="remove"
           >
@@ -77,12 +78,7 @@
       <div slot="body">
         <div>
           <label for="img-src">프로필사진</label>
-          <input
-            id="img-src"
-            name="img-src"
-            type="text"
-            v-model="user.imageSrc"
-          >
+          <input id="img-src" name="img-src" type="text" v-model="user.imageSrc">
         </div>
         <div>
           <label for="message-content-input">메시지 입력</label>
@@ -96,21 +92,11 @@
         </div>
         <div>
           <label for="message-time-input">시간</label>
-          <input
-            type="text"
-            id="message-time-input"
-            placeholder="기본값: 현재 시간"
-            v-model="input.time"
-          >
+          <input type="text" id="message-time-input" placeholder="기본값: 현재 시간" v-model="input.time">
         </div>
         <div>
           <div>
-            <input
-              type="checkbox"
-              name="me-input"
-              id="me-id-input"
-              v-model="input.me"
-            >
+            <input type="checkbox" name="me-input" id="me-id-input" v-model="input.me">
             <label for="me-input">나</label>
           </div>
         </div>
@@ -127,40 +113,64 @@
 import Modal from "./components/Modal";
 import To from "./components/To";
 import From from "./components/From";
-import moment from 'moment';
+import moment from "moment";
 
 export default {
   name: "app",
   components: {
-    Modal, To, From
+    Modal,
+    To,
+    From
   },
   data() {
     return {
-      time: moment().locale('ko').format('k:mm'),
+      time: moment()
+        .locale("ko")
+        .format("k:mm"),
       showModal: false,
       selected: null,
-      today: moment().locale('ko').format('LL'),
+      today: moment()
+        .locale("ko")
+        .format("LL"),
       input: { content: "", time: "", me: false },
       user: {
-        imageSrc:
-          "http://www.pororopark.com/images/sub/circle_pororo.png",
+        imageSrc: "http://www.pororopark.com/images/sub/circle_pororo.png",
         name: "뽀로로"
       },
       messages: [
-        { content: "친구야 안녕!", time: moment().locale('ko').format('A h:mm'), me: false }
+        {
+          content: "친구야 안녕!",
+          time: moment()
+            .locale("ko")
+            .format("A h:mm"),
+          me: false
+        }
       ]
     };
   },
-  beforeMount(){
-    if (window.confirm("튜토리얼을 확인하시겠습니까?")){
-      window.open('https://youtu.be/DSEOryKvISk', '_blank')
+  beforeMount() {
+    if (window.confirm("튜토리얼을 확인하시겠습니까?")) {
+      window.open("https://youtu.be/DSEOryKvISk", "_blank");
+      this.$ga.event({
+        eventCategory: "app",
+        eventAction: "goTutorial",
+        eventValue: true
+      });
     }
   },
   methods: {
     add(event) {
       if (!this.input.content) return;
-      if (!this.input.time) this.input.time = moment().locale('ko').format('A h:mm');
+      if (!this.input.time)
+        this.input.time = moment()
+          .locale("ko")
+          .format("A h:mm");
       this.messages.push(this.input);
+      this.$ga.event({
+        eventCategory: "app",
+        eventAction: "add",
+        eventValue: this.input
+      });
       this.initInput();
       this.showModal = false;
     },
@@ -175,6 +185,11 @@ export default {
     remove(event) {
       if (window.confirm("정말 제거하시겠습니까?")) {
         this.messages.pop();
+        this.$ga.event({
+          eventCategory: "app",
+          eventAction: "remove",
+          eventValue: true
+        });
         this.initInput();
       }
     },
@@ -184,19 +199,34 @@ export default {
     select(index) {
       console.log("select");
       this.selected = index;
+      this.$ga.event({
+        eventCategory: 'app',
+        eventAction: 'select',
+        eventValue: index
+      })
     },
     unselect() {
       console.log("unselect");
       this.selected = null;
+      this.$ga.event({
+        eventCategory: 'app',
+        eventAction: 'unselect',
+        eventValue: index
+      })
     },
     close() {
-      this.showModal = false
+      this.showModal = false;
+      this.$ga.event({
+        eventCategory: 'app',
+        eventAction: 'close',
+        eventValue: null
+      })
     },
     editable(index) {
       return this.selected === index;
     },
     async download() {
-      this.showModal = false
+      this.showModal = false;
       // const el = this.$refs.printMe;
       const el = document.body;
       // add option type to get the image version
